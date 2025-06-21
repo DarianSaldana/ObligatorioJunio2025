@@ -3,7 +3,7 @@ package dominio;
 import java.io.*;
 import java.util.*;
 
-public class Sistema implements Serializable {
+public class Sistema extends Observable implements Serializable {
 
     private ArrayList<Cliente> listaClientes;
     private ArrayList<Vehiculo> listaVehiculos;
@@ -28,6 +28,8 @@ public class Sistema implements Serializable {
     // CLIENTES
     public void agregarCliente(Cliente cli) {
         listaClientes.add(cli);
+        setChanged();
+        notifyObservers();
     }
 
     public ArrayList<Cliente> getListaClientes() {
@@ -49,6 +51,8 @@ public class Sistema implements Serializable {
             listaClientes.remove(cliente);
             // Eliminar todos los contratos asociados a ese cliente
             listaContratos.removeIf(c -> c.getCliente().equals(cliente));
+            setChanged();
+            notifyObservers();
             return true;
         }
         return false;
@@ -57,6 +61,8 @@ public class Sistema implements Serializable {
     // VEHÍCULOS
     public void agregarVehiculo(Vehiculo vehi) {
         listaVehiculos.add(vehi);
+        setChanged();
+        notifyObservers();
     }
 
     public ArrayList<Vehiculo> getListaVehiculos() {
@@ -76,6 +82,8 @@ public class Sistema implements Serializable {
     public void agregarEmpleado(Empleado e) {
         if (buscarEmpleadoPorCedula(e.getCedula()) == null) {
             listaEmpleados.add(e);
+            setChanged();
+            notifyObservers();
         }
     }
 
@@ -95,6 +103,8 @@ public class Sistema implements Serializable {
     //CONTRATOS
     public void agregarContrato(Contrato contrato) {
         listaContratos.add(contrato);
+        setChanged();
+        notifyObservers();
     }
 
     public ArrayList<Contrato> getListaContratos() {
@@ -134,24 +144,31 @@ public class Sistema implements Serializable {
         EntradaVehiculo entrada = new EntradaVehiculo(v, e, fecha, hora, notas);
         historialEntradas.add(entrada);
         vehiculosEnParking.add(v);
+        setChanged();
+        notifyObservers();
     }
 
     public ArrayList<EntradaVehiculo> getHistorialEntradas() {
         return historialEntradas;
     }
 
-    public ArrayList<SalidaVehiculo> getHistorialSalidas() {
-        return historialSalidas;
-    }
-
+    //SALIDAS VEHICULOS
     public void registrarSalidaVehiculo(EntradaVehiculo entrada, SalidaVehiculo salida) {
         entrada.marcarComoFinalizada();
         historialSalidas.add(salida);
+        setChanged();
+        notifyObservers();
     }
-
+    
+    public ArrayList<SalidaVehiculo> getHistorialSalidas() {
+        return historialSalidas;
+    }
+    
     //SERVICIOS ADICIONALES
     public void registrarServicioAdicional(ServicioAdicional servicio) {
         serviciosAdicionales.add(servicio);
+        setChanged();
+        notifyObservers();
     }
 
     public ArrayList<ServicioAdicional> getServiciosAdicionales() {
