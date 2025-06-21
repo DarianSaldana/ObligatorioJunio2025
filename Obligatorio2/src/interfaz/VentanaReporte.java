@@ -1,18 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package interfaz;
 
 /**
  *
- * @author dariansaldana
+ * @author dariansaldana 230846
  */
 public class VentanaReporte extends javax.swing.JFrame {
 
-    /**
-     * Creates new form VentanaReporte
-     */
     public VentanaReporte() {
         initComponents();
     }
