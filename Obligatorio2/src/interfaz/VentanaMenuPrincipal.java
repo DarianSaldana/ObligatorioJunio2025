@@ -13,7 +13,7 @@ public class VentanaMenuPrincipal extends javax.swing.JFrame {
     public VentanaMenuPrincipal(Sistema sis) {
         modelo = sis;
         initComponents();
-        setTitle("Pantalla Principal - Darián Saldaña 230846");
+        setTitle("Pantalla Principal - Autor: Darián Saldaña 230846");
     }
 
     /**
