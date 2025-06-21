@@ -1,16 +1,19 @@
 package interfaz;
 
 import dominio.*;
+import java.util.Observable;
+import java.util.Observer;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author dariansaldana 230846
  */
-public class VentanaEmpleado extends javax.swing.JFrame {
+public class VentanaEmpleado extends javax.swing.JFrame implements Observer {
 
     public VentanaEmpleado(Sistema sis) {
         modelo = sis;
+        modelo.addObserver(this);
         initComponents();
         cargarLista();
         setTitle("Gestión de Empleados");
@@ -36,8 +39,8 @@ public class VentanaEmpleado extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         listaEmpleadosEmpleado = new javax.swing.JList();
-        btnVaciarCliente = new javax.swing.JButton();
-        btnAgregarCliente = new javax.swing.JButton();
+        btnVaciarEmpleado = new javax.swing.JButton();
+        btnAgregarEmpleado = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         lblDireccionEmpleado = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
@@ -87,23 +90,23 @@ public class VentanaEmpleado extends javax.swing.JFrame {
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 80, 200, 180));
 
-        btnVaciarCliente.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnVaciarCliente.setText("Vaciar");
-        btnVaciarCliente.addActionListener(new java.awt.event.ActionListener() {
+        btnVaciarEmpleado.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnVaciarEmpleado.setText("Vaciar");
+        btnVaciarEmpleado.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnVaciarClienteActionPerformed(evt);
+                btnVaciarEmpleadoActionPerformed(evt);
             }
         });
-        getContentPane().add(btnVaciarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(18, 290, 90, -1));
+        getContentPane().add(btnVaciarEmpleado, new org.netbeans.lib.awtextra.AbsoluteConstraints(18, 290, 90, -1));
 
-        btnAgregarCliente.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnAgregarCliente.setText("Agregar");
-        btnAgregarCliente.addActionListener(new java.awt.event.ActionListener() {
+        btnAgregarEmpleado.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnAgregarEmpleado.setText("Agregar");
+        btnAgregarEmpleado.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregarClienteActionPerformed(evt);
+                btnAgregarEmpleadoActionPerformed(evt);
             }
         });
-        getContentPane().add(btnAgregarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 290, 100, -1));
+        getContentPane().add(btnAgregarEmpleado, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 290, 100, -1));
 
         jLabel3.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
         jLabel3.setText("Dirección");
@@ -150,16 +153,15 @@ public class VentanaEmpleado extends javax.swing.JFrame {
         lblNroEmpleado.setText(emp.getNumeroEmpleado());
     }//GEN-LAST:event_listaEmpleadosEmpleadoValueChanged
 
-    private void btnVaciarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVaciarClienteActionPerformed
+    private void btnVaciarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVaciarEmpleadoActionPerformed
         lblNombreEmpleado.setText("");
         lblCedulaEmpleado.setText("");
         lblDireccionEmpleado.setText("");
         lblNroEmpleado.setText("");
-
         listaEmpleadosEmpleado.clearSelection();
-    }//GEN-LAST:event_btnVaciarClienteActionPerformed
+    }//GEN-LAST:event_btnVaciarEmpleadoActionPerformed
 
-    private void btnAgregarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarClienteActionPerformed
+    private void btnAgregarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarEmpleadoActionPerformed
         String nombre = lblNombreEmpleado.getText().trim();
         String cedula = lblCedulaEmpleado.getText().trim();
         String direccion = lblDireccionEmpleado.getText().trim();
@@ -177,11 +179,10 @@ public class VentanaEmpleado extends javax.swing.JFrame {
         }
 
         modelo.agregarEmpleado(new Empleado(nombre, cedula, direccion, nroEmpleado));
-        cargarLista();
-        btnVaciarClienteActionPerformed(null);
+        btnVaciarEmpleadoActionPerformed(null);
         JOptionPane.showMessageDialog(this, "Empleado agregado con éxito.");
 
-    }//GEN-LAST:event_btnAgregarClienteActionPerformed
+    }//GEN-LAST:event_btnAgregarEmpleadoActionPerformed
 
     private void lblDireccionEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lblDireccionEmpleadoActionPerformed
         // TODO add your handling code here:
@@ -192,8 +193,8 @@ public class VentanaEmpleado extends javax.swing.JFrame {
     }//GEN-LAST:event_lblNroEmpleadoActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAgregarCliente;
-    private javax.swing.JButton btnVaciarCliente;
+    private javax.swing.JButton btnAgregarEmpleado;
+    private javax.swing.JButton btnVaciarEmpleado;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -207,4 +208,9 @@ public class VentanaEmpleado extends javax.swing.JFrame {
     private javax.swing.JList listaEmpleadosEmpleado;
     // End of variables declaration//GEN-END:variables
     private Sistema modelo;
+
+    @Override
+    public void update(Observable o, Object arg) {
+        cargarLista();
+    }
 }

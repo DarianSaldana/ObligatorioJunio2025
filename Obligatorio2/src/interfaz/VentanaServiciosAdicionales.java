@@ -1,16 +1,19 @@
 package interfaz;
 
 import dominio.*;
+import java.util.Observable;
+import java.util.Observer;
 import javax.swing.DefaultListModel;
 
 /**
  *
  * @author dariansaldana 230846
  */
-public class VentanaServiciosAdicionales extends javax.swing.JFrame {
+public class VentanaServiciosAdicionales extends javax.swing.JFrame implements Observer {
 
     public VentanaServiciosAdicionales(Sistema sis) {
         modelo = sis;
+        modelo.addObserver(this);
         initComponents();
         cargarListas();
         setTitle("Servicios Adicionales");
@@ -334,4 +337,9 @@ public class VentanaServiciosAdicionales extends javax.swing.JFrame {
     private javax.swing.JComboBox selectServicios;
     // End of variables declaration//GEN-END:variables
     private Sistema modelo;
+
+    @Override
+    public void update(Observable o, Object arg) {
+        cargarListas();
+    }
 }

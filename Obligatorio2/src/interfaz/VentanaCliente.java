@@ -1,16 +1,19 @@
 package interfaz;
 
 import dominio.*;
+import java.util.Observable;
+import java.util.Observer;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author dariansaldana 230846
  */
-public class VentanaCliente extends javax.swing.JFrame {
+public class VentanaCliente extends javax.swing.JFrame implements Observer {
 
     public VentanaCliente(Sistema sis) {
         modelo = sis;
+        modelo.addObserver(this);
         initComponents();
         cargarListas();
         setTitle("Gestión de Clientes");
@@ -206,8 +209,7 @@ public class VentanaCliente extends javax.swing.JFrame {
 
         if (confirmacion == JOptionPane.YES_OPTION) {
             modelo.eliminarClientePorCedula(cedula);
-            cargarListas(); // actualiza la lista visual
-            btnVaciarClienteActionPerformed(null); // limpia los campos
+            btnVaciarClienteActionPerformed(null);
             JOptionPane.showMessageDialog(this, "Cliente eliminado con éxito.");
         }
     }//GEN-LAST:event_btnEliminarClienteActionPerformed
@@ -231,7 +233,6 @@ public class VentanaCliente extends javax.swing.JFrame {
         }
 
         modelo.agregarCliente(new Cliente(nombre, direccion, celular, cedula, año));
-        cargarListas();
         btnVaciarClienteActionPerformed(null);
         JOptionPane.showMessageDialog(this, "Cliente agregado con éxito.");
     }//GEN-LAST:event_btnAgregarClienteActionPerformed
@@ -271,4 +272,9 @@ public class VentanaCliente extends javax.swing.JFrame {
     private javax.swing.JList listaClientesCliente;
     // End of variables declaration//GEN-END:variables
     private Sistema modelo;
+
+    @Override
+    public void update(Observable o, Object arg) {
+        cargarListas();
+    }
 }

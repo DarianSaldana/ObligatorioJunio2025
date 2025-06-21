@@ -1,16 +1,19 @@
 package interfaz;
 
 import dominio.*;
+import java.util.Observable;
+import java.util.Observer;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author dariansaldana 230846
  */
-public class VentanaVehiculo extends javax.swing.JFrame {
+public class VentanaVehiculo extends javax.swing.JFrame implements Observer{
 
     public VentanaVehiculo(Sistema sis) {
         modelo = sis;
+        modelo.addObserver(this);
         initComponents();
         cargarListas();
         setTitle("Gestión de Vehículos");
@@ -186,7 +189,6 @@ public class VentanaVehiculo extends javax.swing.JFrame {
 
         Vehiculo nuevo = new Vehiculo(matricula, marca, modeloV, estado);
         modelo.agregarVehiculo(nuevo);
-        cargarListas();
         btnVaciarVehiculoActionPerformed(null);
         JOptionPane.showMessageDialog(this, "Vehículo agregado con éxito.");
     }//GEN-LAST:event_btnAgregarVehiculoActionPerformed
@@ -207,4 +209,9 @@ public class VentanaVehiculo extends javax.swing.JFrame {
     private javax.swing.JList listaVehiculosVehiculo;
     // End of variables declaration//GEN-END:variables
     private Sistema modelo;
+
+    @Override
+    public void update(Observable o, Object arg) {
+        cargarListas();
+    }
 }

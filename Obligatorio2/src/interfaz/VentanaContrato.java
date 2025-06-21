@@ -2,16 +2,19 @@ package interfaz;
 
 import dominio.*;
 import java.awt.GridLayout;
+import java.util.Observable;
+import java.util.Observer;
 import javax.swing.*;
 
 /**
  *
  * @author dariansaldana 230846
  */
-public class VentanaContrato extends javax.swing.JFrame {
+public class VentanaContrato extends javax.swing.JFrame implements Observer {
 
     public VentanaContrato(Sistema sis) {
         modelo = sis;
+        modelo.addObserver(this);
         initComponents();
         cargarListas();
         setTitle("Gestión de Contratos");
@@ -227,4 +230,9 @@ public class VentanaContrato extends javax.swing.JFrame {
     private javax.swing.JList listaVehiculosContrato;
     // End of variables declaration//GEN-END:variables
     private Sistema modelo;
+
+    @Override
+    public void update(Observable o, Object arg) {
+        cargarListas();
+    }
 }
