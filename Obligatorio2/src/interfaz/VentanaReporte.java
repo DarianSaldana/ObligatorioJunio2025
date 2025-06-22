@@ -11,7 +11,7 @@ import java.io.*;
  *
  * @author dariansaldana 230846
  */
-public class VentanaReporte extends javax.swing.JFrame {
+public class VentanaReporte extends javax.swing.JFrame implements Observer {
 
     public VentanaReporte(Sistema sis) {
         modelo = sis;
@@ -111,7 +111,7 @@ public class VentanaReporte extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         tabEstadisticasGenerales.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
