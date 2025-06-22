@@ -1,13 +1,91 @@
 package interfaz;
 
+import dominio.*;
+import javax.swing.DefaultListModel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.ButtonGroup;
+import java.util.*;
+import java.io.*;
+
 /**
  *
  * @author dariansaldana 230846
  */
 public class VentanaReporte extends javax.swing.JFrame {
 
-    public VentanaReporte() {
+    public VentanaReporte(Sistema sis) {
+        modelo = sis;
         initComponents();
+        cargarListaVehiculos();
+    }
+
+    private void cargarListaVehiculos() {
+
+        cargarFiltros();
+        configurarOrden();
+
+        // Vehículos
+        DefaultListModel modeloVehiculos = new DefaultListModel();
+        for (Vehiculo v : modelo.getListaVehiculos()) {
+            modeloVehiculos.addElement(v);
+        }
+        listaVehiculosReporte.setModel(modeloVehiculos);
+    }
+
+    private void cargarFiltros() {
+        filtroMovimientos.removeAllItems();
+        filtroMovimientos.addItem("Todos");
+        filtroMovimientos.addItem("Entradas");
+        filtroMovimientos.addItem("Salidas");
+        filtroMovimientos.addItem("Servicios");
+    }
+
+    private void configurarOrden() {
+        ButtonGroup group = new ButtonGroup();
+        group.add(ordenAscendente);
+        group.add(ordenDescendente);
+        ordenAscendente.setSelected(true);
+    }
+
+    private void cargarHistorial(Vehiculo vehiculo) {
+        List<MovimientoVehiculo> historial = new ArrayList<>();
+
+        for (EntradaVehiculo entrada : modelo.getHistorialEntradas()) {
+            if (entrada.getVehiculo().equals(vehiculo)) {
+                historial.add(new MovimientoVehiculo("Entrada", entrada.getFecha() + " " + entrada.getHora(), "Notas: " + entrada.getNotas()));
+            }
+        }
+
+        for (SalidaVehiculo salida : modelo.getHistorialSalidas()) {
+            if (salida.getVehiculo().equals(vehiculo)) {
+                historial.add(new MovimientoVehiculo("Salida", salida.getFecha() + " " + salida.getHora(), "Empleado: " + salida.getEmpleado().getNombre()));
+            }
+        }
+
+        for (ServicioAdicional servicio : modelo.getServiciosAdicionales()) {
+            if (servicio.getVehiculo().equals(vehiculo)) {
+                historial.add(new MovimientoVehiculo("Servicio", servicio.getFecha() + " " + servicio.getHora(), servicio.getTipoServicio() + " - $" + servicio.getCosto()));
+            }
+        }
+
+        // Filtro
+        String filtro = (String) filtroMovimientos.getSelectedItem();
+        if (!"Todos".equals(filtro)) {
+            historial.removeIf(m -> !m.getTipo().equalsIgnoreCase(filtro));
+        }
+
+        // Orden
+        historial.sort((m1, m2) -> {
+            int comparacion = m1.getFechaHora().compareTo(m2.getFechaHora());
+            return ordenAscendente.isSelected() ? comparacion : -comparacion;
+        });
+
+        // Mostrar en tabla
+        DefaultTableModel model = new DefaultTableModel(new String[]{"Tipo", "Fecha/Hora", "Detalle"}, 0);
+        for (MovimientoVehiculo m : historial) {
+            model.addRow(new Object[]{m.getTipo(), m.getFechaHora(), m.getDescripcion()});
+        }
+        tablaHistorial.setModel(model);
     }
 
     /**
@@ -19,32 +97,187 @@ public class VentanaReporte extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        tabEstadisticasGenerales = new javax.swing.JTabbedPane();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
         jScrollPane5 = new javax.swing.JScrollPane();
-        listaEmpleadosContrato = new javax.swing.JList();
-        jLabel5 = new javax.swing.JLabel();
+        listaVehiculosReporte = new javax.swing.JList();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tablaHistorial = new javax.swing.JTable();
+        filtroMovimientos = new javax.swing.JComboBox<>();
+        ordenDescendente = new javax.swing.JRadioButton();
+        ordenAscendente = new javax.swing.JRadioButton();
+        btnExportarArchivo = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        listaEmpleadosContrato.setModel(new javax.swing.AbstractListModel() {
+        tabEstadisticasGenerales.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
+
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel1.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
+        jLabel1.setText("Vehículo");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, -1, -1));
+
+        listaVehiculosReporte.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
+        listaVehiculosReporte.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane5.setViewportView(listaEmpleadosContrato);
+        listaVehiculosReporte.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                listaVehiculosReporteValueChanged(evt);
+            }
+        });
+        jScrollPane5.setViewportView(listaVehiculosReporte);
 
-        getContentPane().add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, 140, 170));
+        jPanel1.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, 170, 180));
 
-        jLabel5.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
-        jLabel5.setText("Empleado");
-        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, 70, 50));
+        tablaHistorial.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "Entradas", "Salidas", "Servicios Adicionales"
+            }
+        ));
+        jScrollPane1.setViewportView(tablaHistorial);
+
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 70, 490, 250));
+
+        filtroMovimientos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        filtroMovimientos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filtroMovimientosActionPerformed(evt);
+            }
+        });
+        jPanel1.add(filtroMovimientos, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 30, 180, -1));
+
+        ordenDescendente.setText("Orden Decreciente");
+        ordenDescendente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ordenDescendenteActionPerformed(evt);
+            }
+        });
+        jPanel1.add(ordenDescendente, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 30, -1, -1));
+
+        ordenAscendente.setText("Orden Creciente");
+        ordenAscendente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ordenAscendenteActionPerformed(evt);
+            }
+        });
+        jPanel1.add(ordenAscendente, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 30, -1, -1));
+
+        btnExportarArchivo.setText("Exportar Archivo");
+        btnExportarArchivo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExportarArchivoActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnExportarArchivo, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 340, -1, -1));
+
+        tabEstadisticasGenerales.addTab("Historial", jPanel1);
+        tabEstadisticasGenerales.addTab("Movimientos", jPanel2);
+        tabEstadisticasGenerales.addTab("Estadísticas Generales", jPanel3);
+
+        getContentPane().add(tabEstadisticasGenerales, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 30, 690, 420));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void listaVehiculosReporteValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listaVehiculosReporteValueChanged
+        if (!evt.getValueIsAdjusting()) {
+            Vehiculo seleccionado = (Vehiculo) listaVehiculosReporte.getSelectedValue();
+            if (seleccionado != null) {
+                cargarHistorial(seleccionado);
+            }
+        }
+    }//GEN-LAST:event_listaVehiculosReporteValueChanged
+
+    private void btnExportarArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarArchivoActionPerformed
+        Vehiculo seleccionado = (Vehiculo) listaVehiculosReporte.getSelectedValue();
+        if (seleccionado == null) {
+            return;
+        }
+
+        try (PrintWriter writer = new PrintWriter(new File(seleccionado.getMatricula() + ".txt"))) {
+            for (int i = 0; i < tablaHistorial.getRowCount(); i++) {
+                String linea = "";
+                for (int j = 0; j < tablaHistorial.getColumnCount(); j++) {
+                    linea += tablaHistorial.getValueAt(i, j).toString();
+                    if (j < tablaHistorial.getColumnCount() - 1) {
+                        linea += " | ";
+                    }
+                }
+                writer.println(linea);
+            }
+            javax.swing.JOptionPane.showMessageDialog(this, "Archivo exportado exitosamente.");
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error al exportar archivo: " + e.getMessage());
+        }
+    }//GEN-LAST:event_btnExportarArchivoActionPerformed
+
+    private void filtroMovimientosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtroMovimientosActionPerformed
+        Vehiculo seleccionado = (Vehiculo) listaVehiculosReporte.getSelectedValue();
+        if (seleccionado != null) {
+            cargarHistorial(seleccionado);
+        }
+    }//GEN-LAST:event_filtroMovimientosActionPerformed
+
+    private void ordenDescendenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ordenDescendenteActionPerformed
+        filtroMovimientosActionPerformed(evt);
+    }//GEN-LAST:event_ordenDescendenteActionPerformed
+
+    private void ordenAscendenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ordenAscendenteActionPerformed
+        filtroMovimientosActionPerformed(evt);
+    }//GEN-LAST:event_ordenAscendenteActionPerformed
+
+    private class MovimientoVehiculo {
+
+        private String tipo;
+        private String fechaHora;
+        private String descripcion;
+
+        public MovimientoVehiculo(String tipo, String fechaHora, String descripcion) {
+            this.tipo = tipo;
+            this.fechaHora = fechaHora;
+            this.descripcion = descripcion;
+        }
+
+        public String getTipo() {
+            return tipo;
+        }
+
+        public String getFechaHora() {
+            return fechaHora;
+        }
+
+        public String getDescripcion() {
+            return descripcion;
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel5;
+    private javax.swing.JButton btnExportarArchivo;
+    private javax.swing.JComboBox<String> filtroMovimientos;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JList listaEmpleadosContrato;
+    private javax.swing.JList listaVehiculosReporte;
+    private javax.swing.JRadioButton ordenAscendente;
+    private javax.swing.JRadioButton ordenDescendente;
+    private javax.swing.JTabbedPane tabEstadisticasGenerales;
+    private javax.swing.JTable tablaHistorial;
     // End of variables declaration//GEN-END:variables
+    private Sistema modelo;
 }
