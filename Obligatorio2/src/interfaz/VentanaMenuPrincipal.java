@@ -1,8 +1,11 @@
 package interfaz;
 
+import Utilidades.TemaUI;
 import dominio.*;
+import java.awt.Color;
 import java.io.*;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -43,11 +46,17 @@ public class VentanaMenuPrincipal extends javax.swing.JFrame {
         opcionMinijuego = new javax.swing.JMenuItem();
         opcionInformacionAutor = new javax.swing.JMenuItem();
         menuTerminar = new javax.swing.JMenu();
+        opcionSalir = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         btnClaroOscuro.setText("Claro/Oscuro");
+        btnClaroOscuro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClaroOscuroActionPerformed(evt);
+            }
+        });
         getContentPane().add(btnClaroOscuro, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 300, -1, -1));
 
         menuGestion.setText("Gestión");
@@ -117,23 +126,57 @@ public class VentanaMenuPrincipal extends javax.swing.JFrame {
         menuVarios.setText("Varios");
 
         opcionReportes.setText("Reportes");
+        opcionReportes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                opcionReportesActionPerformed(evt);
+            }
+        });
         menuVarios.add(opcionReportes);
 
         opcionGrabacionDatos.setText("Grabación de datos");
+        opcionGrabacionDatos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                opcionGrabacionDatosActionPerformed(evt);
+            }
+        });
         menuVarios.add(opcionGrabacionDatos);
 
         opcionRecuperacionDatos.setText("Recuperación de datos");
+        opcionRecuperacionDatos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                opcionRecuperacionDatosActionPerformed(evt);
+            }
+        });
         menuVarios.add(opcionRecuperacionDatos);
 
         opcionMinijuego.setText("Minijuego");
+        opcionMinijuego.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                opcionMinijuegoActionPerformed(evt);
+            }
+        });
         menuVarios.add(opcionMinijuego);
 
         opcionInformacionAutor.setText("Información de autor");
+        opcionInformacionAutor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                opcionInformacionAutorActionPerformed(evt);
+            }
+        });
         menuVarios.add(opcionInformacionAutor);
 
         jMenuBar1.add(menuVarios);
 
         menuTerminar.setText("Terminar");
+
+        opcionSalir.setText("Salir");
+        opcionSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                opcionSalirActionPerformed(evt);
+            }
+        });
+        menuTerminar.add(opcionSalir);
+
         jMenuBar1.add(menuTerminar);
 
         setJMenuBar(jMenuBar1);
@@ -176,6 +219,80 @@ public class VentanaMenuPrincipal extends javax.swing.JFrame {
         vent.setVisible(true);
     }//GEN-LAST:event_opcionServiciosAdicionalesActionPerformed
 
+    private void opcionReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcionReportesActionPerformed
+        VentanaReporte vent = new VentanaReporte(modelo);
+        vent.setVisible(true);
+    }//GEN-LAST:event_opcionReportesActionPerformed
+
+    private void opcionGrabacionDatosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcionGrabacionDatosActionPerformed
+        try {
+            FileOutputStream arch = new FileOutputStream("DATOS.ser");
+            ObjectOutputStream grabar = new ObjectOutputStream(arch);
+            grabar.writeObject(modelo);
+            grabar.close();
+            JOptionPane.showMessageDialog(this, "Datos grabados correctamente.");
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage() + " - No se pudo serializar", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_opcionGrabacionDatosActionPerformed
+
+    private void opcionRecuperacionDatosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcionRecuperacionDatosActionPerformed
+        File archivo = new File("DATOS.ser");
+
+        if (archivo.exists()) {
+            int confirmacion = JOptionPane.showConfirmDialog(this,
+                    "¿Desea sobrescribir el sistema actual con los datos guardados?",
+                    "Atención", JOptionPane.YES_NO_OPTION);
+
+            if (confirmacion == JOptionPane.YES_OPTION) {
+                try (ObjectInputStream leer = new ObjectInputStream(new FileInputStream(archivo))) {
+                    modelo = (Sistema) leer.readObject();
+                    JOptionPane.showMessageDialog(this, "Datos recuperados exitosamente.");
+                } catch (IOException | ClassNotFoundException e) {
+                    JOptionPane.showMessageDialog(this, "Error al recuperar datos: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } else {
+            int confirmacion = JOptionPane.showConfirmDialog(this,
+                    "No se encontró un archivo de datos guardado.\n¿Desea reiniciar el sistema?",
+                    "Atención", JOptionPane.YES_NO_OPTION);
+
+            if (confirmacion == JOptionPane.YES_OPTION) {
+                modelo = new Sistema(); // Reinicia el sistema vacío
+                JOptionPane.showMessageDialog(this, "Sistema reiniciado.");
+            }
+        }
+    }//GEN-LAST:event_opcionRecuperacionDatosActionPerformed
+
+    private void opcionSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcionSalirActionPerformed
+        int confirmacion = JOptionPane.showConfirmDialog(this,
+                "La aplicación se cerrará.\n¿Desea continuar?",
+                "Atención", JOptionPane.YES_NO_OPTION);
+
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            System.exit(0);
+        }
+    }//GEN-LAST:event_opcionSalirActionPerformed
+
+    private void opcionInformacionAutorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcionInformacionAutorActionPerformed
+        VentanaInformacionAutor vent = new VentanaInformacionAutor();
+        vent.setVisible(true);
+    }//GEN-LAST:event_opcionInformacionAutorActionPerformed
+
+    private void opcionMinijuegoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcionMinijuegoActionPerformed
+        new VentanaMinijuego().setVisible(true);
+    }//GEN-LAST:event_opcionMinijuegoActionPerformed
+
+    private void btnClaroOscuroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClaroOscuroActionPerformed
+        TemaUI.alternarModo();
+        TemaUI.aplicarTemaGlobal(this);
+
+        JOptionPane.showMessageDialog(this,
+                "Tema actualizado. Las ventanas abiertas no se actualizan automáticamente.",
+                "Información", JOptionPane.INFORMATION_MESSAGE);
+
+    }//GEN-LAST:event_btnClaroOscuroActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton btnClaroOscuro;
     private javax.swing.JMenuBar jMenuBar1;
@@ -194,6 +311,7 @@ public class VentanaMenuPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem opcionRecuperacionDatos;
     private javax.swing.JMenuItem opcionReportes;
     private javax.swing.JMenuItem opcionSalidas;
+    private javax.swing.JMenuItem opcionSalir;
     private javax.swing.JMenuItem opcionServiciosAdicionales;
     // End of variables declaration//GEN-END:variables
     private Sistema modelo;

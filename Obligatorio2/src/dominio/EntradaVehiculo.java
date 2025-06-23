@@ -14,6 +14,7 @@ public class EntradaVehiculo implements Serializable {
     private String hora;
     private String notas;
     private boolean finalizada;
+    private SalidaVehiculo salida;
 
     public EntradaVehiculo(Vehiculo vehiculo, Empleado empleado, String fecha, String hora, String notas) {
         this.vehiculo = vehiculo;
@@ -50,6 +51,14 @@ public class EntradaVehiculo implements Serializable {
 
     public void marcarComoFinalizada() {
         this.finalizada = true;
+    }
+
+    public SalidaVehiculo getSalida() {
+        return salida;
+    }
+
+    public void setSalida(SalidaVehiculo salida) {
+        this.salida = salida;
     }
 
     @Override

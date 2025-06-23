@@ -1,5 +1,6 @@
 package interfaz;
 
+import Utilidades.TemaUI;
 import dominio.*;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -17,6 +18,7 @@ public class VentanaSalidaVehiculo extends javax.swing.JFrame implements Observe
         modelo = sis;
         modelo.addObserver(this);
         initComponents();
+        TemaUI.aplicarTema(this);
         cargarListas();
         setTitle("Salida de Vehículos");
     }

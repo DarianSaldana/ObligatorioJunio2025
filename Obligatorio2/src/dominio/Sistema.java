@@ -154,16 +154,20 @@ public class Sistema extends Observable implements Serializable {
 
     //SALIDAS VEHICULOS
     public void registrarSalidaVehiculo(EntradaVehiculo entrada, SalidaVehiculo salida) {
+
         entrada.marcarComoFinalizada();
+        entrada.setSalida(salida);
+        salida.setEntrada(entrada);
+
         historialSalidas.add(salida);
         setChanged();
         notifyObservers();
     }
-    
+
     public ArrayList<SalidaVehiculo> getHistorialSalidas() {
         return historialSalidas;
     }
-    
+
     //SERVICIOS ADICIONALES
     public void registrarServicioAdicional(ServicioAdicional servicio) {
         serviciosAdicionales.add(servicio);

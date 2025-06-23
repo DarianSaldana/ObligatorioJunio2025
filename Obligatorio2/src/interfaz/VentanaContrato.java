@@ -1,5 +1,6 @@
 package interfaz;
 
+import Utilidades.TemaUI;
 import dominio.*;
 import java.awt.GridLayout;
 import java.util.Observable;
@@ -16,6 +17,7 @@ public class VentanaContrato extends javax.swing.JFrame implements Observer {
         modelo = sis;
         modelo.addObserver(this);
         initComponents();
+        TemaUI.aplicarTema(this);
         cargarListas();
         setTitle("Gestión de Contratos");
     }

@@ -1,5 +1,6 @@
 package interfaz;
 
+import Utilidades.TemaUI;
 import dominio.*;
 import java.util.Observable;
 import java.util.Observer;
@@ -15,6 +16,7 @@ public class VentanaEntradaVehiculo extends javax.swing.JFrame implements Observ
         modelo = sis;
         modelo.addObserver(this);
         initComponents();
+        TemaUI.aplicarTema(this);
         cargarListas();
         setTitle("Entrada de Vehículos");
     }
@@ -181,7 +183,7 @@ public class VentanaEntradaVehiculo extends javax.swing.JFrame implements Observ
 
         if (vehiculoSeleccionado == null || empleadoSeleccionado == null || fechaTexto.isEmpty() || horaTexto.isEmpty()) {
             javax.swing.JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios. Seleccione el vehículo que ingresa, "
-                + "el empleado que lo estaciona, en qué fecha y a qué hora.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                    + "el empleado que lo estaciona, en qué fecha y a qué hora.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
             return;
         }
 

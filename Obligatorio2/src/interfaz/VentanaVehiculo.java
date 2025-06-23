@@ -1,5 +1,6 @@
 package interfaz;
 
+import Utilidades.TemaUI;
 import dominio.*;
 import java.util.Observable;
 import java.util.Observer;
@@ -16,6 +17,7 @@ public class VentanaVehiculo extends javax.swing.JFrame implements Observer{
         modelo.addObserver(this);
         initComponents();
         cargarListas();
+        TemaUI.aplicarTema(this);
         setTitle("Gestión de Vehículos");
 
     }

@@ -1,5 +1,6 @@
 package interfaz;
 
+import Utilidades.TemaUI;
 import dominio.*;
 import java.util.Observable;
 import java.util.Observer;
@@ -15,6 +16,7 @@ public class VentanaCliente extends javax.swing.JFrame implements Observer {
         modelo = sis;
         modelo.addObserver(this);
         initComponents();
+        TemaUI.aplicarTema(this);
         cargarListas();
         setTitle("Gestión de Clientes");
     }

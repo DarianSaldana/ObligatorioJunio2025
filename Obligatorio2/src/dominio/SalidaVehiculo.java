@@ -13,6 +13,7 @@ public class SalidaVehiculo implements Serializable {
     private String fecha;
     private String hora;
     private String comentario;
+    private EntradaVehiculo entrada;
 
     public SalidaVehiculo(Vehiculo vehiculo, Empleado empleado, String fecha, String hora, String comentario) {
         this.vehiculo = vehiculo;
@@ -40,6 +41,14 @@ public class SalidaVehiculo implements Serializable {
 
     public String getComentario() {
         return comentario;
+    }
+
+    public EntradaVehiculo getEntrada() {
+        return entrada;
+    }
+
+    public void setEntrada(EntradaVehiculo entrada) {
+        this.entrada = entrada;
     }
 
     @Override
